@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace script
 {
@@ -14,7 +11,7 @@ namespace script
             Console.WriteLine("Subprocess started");
 
             var alphabet = "abcdefghijklmnopqrstuvwxyz0123456789{}:.,()-";
-            var path = @"E:\me\python\year4\last\result.txt";
+            var path = @".\result.txt";
             string text;
 
             using (var file = new StreamReader(path))

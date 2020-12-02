@@ -2,11 +2,12 @@ import os
 import glob
 import json
 import subprocess
+from functools import reduce
 
 def GatherAllData(result_file):
     result_file.write('Function to gather data from all .json files started')
 
-    dirPath = 'E:\\me\python\\year4\\last\\'
+    dirPath = '.\\'
     files = glob.glob(os.path.join(dirPath, '*.json'))
 
     result_file.write('\nAll data files have same structure:')
@@ -34,134 +35,76 @@ def GatherAllData(result_file):
     json.dump(data[0], result_file, indent=4)
     
     return data
+
+def GetValuesByKey(data, key):
+    values = []
+    
+    for record in data: 
+        key1 = list(record.keys())[0]
+        key2 = record[key1].keys()
+        for k in key2:  
+            if k == key:
+                values.append({"value":record[key1][k], "date":key1})
+
+            elif isinstance(record[key1][k], list):
+                for elem in record[key1][k]: 
+                    key3 = elem.keys()
+                    if key in key3:
+                        values.append({"value": elem[key], "date":key1})
+
+            elif isinstance(record[key1][k], dict):  
+                key4 = record[key1][k].keys()
+                if key in key4:
+                    values.append({"value":record[key1][k][key], "date":key1})
+
+    return values
               
 def GetValueByKey(result_file, data, key):
     result_file.write(f'\n\nPrint value by key: {key}:')
-    for record in data: 
-        key1 = list(record.keys())[0]
-        key2 = record[key1].keys()
-        for k in key2:  
-            if k == key:
-                result_file.write(f'\nValue of key: {key} is {record[key1][k]} on {key1}')
 
-            elif isinstance(record[key1][k], list):
-                for elem in record[key1][k]: 
-                    key3 = elem.keys()
-                    if key in key3:
-                        result_file.write(f'\nValue of key: {key} is {elem[key]} on {key1}')
-
-            elif isinstance(record[key1][k], dict):  
-                key4 = record[key1][k].keys()
-                if key in key4:
-                    result_file.write(f'\nValue of key: {key} is {record[key1][k][key]} on {key1}')
-    
+    values = GetValuesByKey(data, key)
+    for value in values:
+        result_file.write(f'\nValue of key: {key} is {value["value"]} on {value["date"]}')
               
 def GetMaxValueByKey(result_file, data, key):
     result_file.write(f'\n\nPrint max value by key: {key}:')
-    maxvalue = 0
-    date = ''
-    for record in data: 
-        key1 = list(record.keys())[0]
-        key2 = record[key1].keys()
-        for k in key2:  
-            if k == key:
-                if record[key1][k] > maxvalue:
-                    maxvalue = record[key1][k]
-                    date = key1
+    
+    values = GetValuesByKey(data, key)
+    maxPair = max(values, key=lambda value: value["value"])
 
-            elif isinstance(record[key1][k], list):
-                for elem in record[key1][k]: 
-                    key3 = elem.keys()
-                    if key in key3:
-                        if elem[key] > maxvalue:
-                            maxvalue = elem[key]
-                            date = key1
-
-            elif isinstance(record[key1][k], dict):  
-                key4 = record[key1][k].keys()
-                if key in key4:
-                    if record[key1][k][key] > maxvalue:
-                        maxvalue = record[key1][k][key]
-                        date = key1    
-
-    result_file.write(f'\nMax value of key: {key} is {maxvalue} on {key1}') 
+    result_file.write(f'\nMax value of key: {key} is {maxPair["value"]} on {maxPair["date"]}') 
               
 def GetAvgValueByKey(result_file, data, key):
     result_file.write(f'\n\nPrint average value by key: {key}:')
-    avg = 0
-    for record in data: 
-        key1 = list(record.keys())[0]
-        key2 = record[key1].keys()
-        for k in key2:  
-            if k == key:
-                avg += record[key1][k]
 
-            elif isinstance(record[key1][k], list):
-                for elem in record[key1][k]: 
-                    key3 = elem.keys()
-                    if key in key3:
-                        avg += elem[key]
+    values = GetValuesByKey(data, key)
+    avg = reduce(lambda prev,current: prev + current["value"], values, 0)
 
-            elif isinstance(record[key1][k], dict):  
-                key4 = record[key1][k].keys()
-                if key in key4:
-                    avg += record[key1][k][key]  
-
-    result_file.write(f'\nAvg value of key: {key} is {avg / len(data)}') 
+    result_file.write(f'\nAvg value of key: {key} is {avg/len(values)}') 
                 
 def GetDaysWithParticulatWeatherCondition(result_file, data, key, value):
     result_file.write(f'\n\nPrint dates with given value by key: {key}:')
-    for record in data: 
-        key1 = list(record.keys())[0]
-        key2 = record[key1].keys()
-        for k in key2:  
-            if k == key:
-                if record[key1][k] == value:
-                    result_file.write(f'\nValue of key: {key} is {record[key1][k]} on {key1}')
 
-            elif isinstance(record[key1][k], list):
-                for elem in record[key1][k]: 
-                    key3 = elem.keys()
-                    if key in key3:
-                        if elem[key] == value:
-                            result_file.write(f'\nValue of key: {key} is {elem[key]} on {key1}')
-
-            elif isinstance(record[key1][k], dict):  
-                key4 = record[key1][k].keys()
-                if key in key4:
-                    if record[key1][k][key] == value:
-                        result_file.write(f'\nValue of key: {key} is {record[key1][k][key]} on {key1}')       
+    values = GetValuesByKey(data, key)
+    vals = filter(lambda x: x["value"] == value, values)
+    for val in vals:
+        result_file.write(f'\nValue of key: {key} is {val["value"]} on {val["date"]}')       
               
 def GetDaysWithValueMoreThan(result_file, data, key, diff):
     result_file.write(f'\n\nPrint dates with value bigger then given by key: {key}:')
-    for record in data: 
-        key1 = list(record.keys())[0]
-        key2 = record[key1].keys()
-        for k in key2:  
-            if k == key:
-                if record[key1][k] > diff:
-                    result_file.write(f'\nValue of key: {key} is {record[key1][k]} and is more than {diff} on {key1}')
-
-            elif isinstance(record[key1][k], list):
-                for elem in record[key1][k]: 
-                    key3 = elem.keys()
-                    if key in key3:
-                        if elem[key] > diff:
-                            result_file.write(f'\nValue of key: {key} is {elem[key]} and is more than {diff} on {key1}')
-
-            elif isinstance(record[key1][k], dict):  
-                key4 = record[key1][k].keys()
-                if key in key4:
-                    if record[key1][k][key] > diff:
-                        result_file.write(f'\nValue of key: {key} is {record[key1][k][key]} and is more than {diff} on {key1}')
+    
+    values = GetValuesByKey(data, key)
+    vals = filter(lambda x: x["value"] > diff, values)
+    for val in vals:
+        result_file.write(f'\nValue of key: {key} is {val["value"]} and is more than {diff} on {val["date"]}')
     
 def runSubprocess():
     print('Run subprocess')
-    subprocess.run(['E:\\me\\python\\year4\\last\\script\\script\\bin\\Debug\\script.exe', ' empty'])  
+    subprocess.run(['.\\script\\script\\bin\\Debug\\script.exe', ' empty'])  
     print('Subprocess ended')
               
 def main():
-    with open('E:\\me\\python\\year4\\last\\result.txt', 'w') as result_file:
+    with open('.\\result.txt', 'w') as result_file:
         data = GatherAllData(result_file)
         GetValueByKey(result_file, data, 'temp_max')
         GetMaxValueByKey(result_file, data, 'temp')

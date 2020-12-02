@@ -5,10 +5,14 @@ import urllib.request
 from datetime import date
 from pprint import pprint
 
+def GetServerAddress(apiKey):
+    url = 'http://api.openweathermap.org/data/2.5/weather?q=Lviv&appid=$$apiKey$$'
+    return url.replace('$$apiKey$$', apiKey)
+
 def GetDataFromServer():   
     print('Checking if file with data for this day already exist')
 
-    dirPath = 'E:\\me\python\\year4\\last\\'
+    dirPath = '.\\'
     files = glob.glob(os.path.join(dirPath, '*.json'))
 
     today = date.today().strftime('%d-%m-%Y')
@@ -20,7 +24,7 @@ def GetDataFromServer():
 
     print('Connecting to server...')
 
-    remoteaddr = 'http://api.openweathermap.org/data/2.5/weather?q=Lviv&appid=MYAPI'
+    remoteaddr = GetServerAddress('1952efb4a7da640d955fd67682858a7f')
     remotefile = urllib.request.urlopen(remoteaddr)  
 
     print('Get file')

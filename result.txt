@@ -72,7 +72,7 @@ Value of key: temp_max is 272.15 on 29-11-2020
 Value of key: temp_max is 271.15 on 30-11-2020
 
 Print max value by key: temp:
-Max value of key: temp is 273.42 on 30-11-2020
+Max value of key: temp is 273.42 on 27-11-2020
 
 Print average value by key: humidity:
 Avg value of key: humidity is 91.5
@@ -112,14 +112,14 @@ Letter - w	amount - 4
 Letter - x	amount - 13
 Letter - y	amount - 42
 Letter - z	amount - 1
-Letter - 0	amount - 68
+Letter - 0	amount - 67
 Letter - 1	amount - 57
-Letter - 2	amount - 76
-Letter - 3	amount - 13
+Letter - 2	amount - 77
+Letter - 3	amount - 12
 Letter - 4	amount - 16
 Letter - 5	amount - 13
 Letter - 6	amount - 10
-Letter - 7	amount - 26
+Letter - 7	amount - 27
 Letter - 8	amount - 12
 Letter - 9	amount - 17
 Letter - {	amount - 9
