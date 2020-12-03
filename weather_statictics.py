@@ -5,6 +5,7 @@ import subprocess
 from functools import reduce
 
 def GatherAllData(result_file):
+    """ Read all data from result_file and analyze json structure """
     result_file.write('Function to gather data from all .json files started')
 
     dirPath = '.\\'
@@ -37,6 +38,7 @@ def GatherAllData(result_file):
     return data
 
 def GetValuesByKey(data, key):
+    """ Get values from data by specific key """
     values = []
     
     for record in data: 
@@ -60,6 +62,7 @@ def GetValuesByKey(data, key):
     return values
               
 def GetValueByKey(result_file, data, key):
+    """ Write to result_file values from data by specific key """
     result_file.write(f'\n\nPrint value by key: {key}:')
 
     values = GetValuesByKey(data, key)
@@ -67,6 +70,7 @@ def GetValueByKey(result_file, data, key):
         result_file.write(f'\nValue of key: {key} is {value["value"]} on {value["date"]}')
               
 def GetMaxValueByKey(result_file, data, key):
+    """ Write to result_file max value from data by specific key """
     result_file.write(f'\n\nPrint max value by key: {key}:')
     
     values = GetValuesByKey(data, key)
@@ -75,6 +79,7 @@ def GetMaxValueByKey(result_file, data, key):
     result_file.write(f'\nMax value of key: {key} is {maxPair["value"]} on {maxPair["date"]}') 
               
 def GetAvgValueByKey(result_file, data, key):
+    """ Write to result_file average value from data by specific key """
     result_file.write(f'\n\nPrint average value by key: {key}:')
 
     values = GetValuesByKey(data, key)
@@ -83,6 +88,7 @@ def GetAvgValueByKey(result_file, data, key):
     result_file.write(f'\nAvg value of key: {key} is {avg/len(values)}') 
                 
 def GetDaysWithParticulatWeatherCondition(result_file, data, key, value):
+    """ Write to result_file days with particulat weather condition """
     result_file.write(f'\n\nPrint dates with given value by key: {key}:')
 
     values = GetValuesByKey(data, key)
@@ -91,6 +97,7 @@ def GetDaysWithParticulatWeatherCondition(result_file, data, key, value):
         result_file.write(f'\nValue of key: {key} is {val["value"]} on {val["date"]}')       
               
 def GetDaysWithValueMoreThan(result_file, data, key, diff):
+    """ Write to result_file days with value more than """
     result_file.write(f'\n\nPrint dates with value bigger then given by key: {key}:')
     
     values = GetValuesByKey(data, key)
@@ -99,8 +106,9 @@ def GetDaysWithValueMoreThan(result_file, data, key, diff):
         result_file.write(f'\nValue of key: {key} is {val["value"]} and is more than {diff} on {val["date"]}')
     
 def runSubprocess():
+    """ Run C# subprocess """
     print('Run subprocess')
-    subprocess.run(['.\\script\\script\\bin\\Debug\\script.exe', ' empty'])  
+    subprocess.run(['.\\Release\\script.exe', ' empty'])  
     print('Subprocess ended')
               
 def main():
